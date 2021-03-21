@@ -221,3 +221,24 @@ node --require ./setup-global.js global.js
 ```
 
 Ele executará nosso código atribuindo globalmente as funções **test** e **expecte** para o arquivo ```global.js``` que consequentemente usa as mesmas porém não é necessário importamos ou até mesmo escreve-las dentro do arquivo para que possamos usar.
+
+## 06 - Aprendendo a verificar JavaScript testes personalizados com Jest
+Por fim iremos utilizar uma biblioteca chamada **jest**, recomendamos inicializar um projeto com **npm** ou **yarn**, em seguida criar um arquivos chamado ```jest.test.js``` que será responsável por executar os testes da nossa aplicação.
+
+```javascript
+const {sumAsync, subtractAsync} = require('./math')
+
+test('sumAsync adds numbers asynchronously', async () => {
+  const result = await sumAsync(3, 7)
+  const expected = 10
+  expect(result).toBe(expected)
+})
+
+test('subtractAsync subtracts numbers asynchronously', async () => {
+  const result = await subtractAsync(7, 3)
+  const expected = 4
+  expect(result).toBe(expected)
+})
+```
+
+Nesse caso não precisamos importar ou usar outro arquivo de módulo, pois por padrão o jest já possui tais funlões como **expect**, **toBe** e **test**, criadas dentro do seu **core**.
