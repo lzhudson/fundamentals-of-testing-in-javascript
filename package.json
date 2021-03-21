@@ -1,0 +1,12 @@
+{
+  "name": "001-fundamentals-of-testing-in-javascript",
+  "version": "1.0.0",
+  "description": "test-javascript",
+  "main": "jest.test.jss",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Hudson Holanda <hudsonholanda55@gmail.com> (https://lzhudson.github.io/)",
+  "license": "MIT"
+}
