@@ -162,3 +162,62 @@ function expect(actual) {
 ```
 
 No código acima importamos a função **sumAsync** e **subtractAsync**, onde as mesmas são Promises que retornam um código assíncrono onde precisamos resolvar os mesmos. Note que mudamos dentro da função **test** tornamos a função assíncrona e adicionamos o **await** na função de **callback**, isso faz com que o nosso código espere a execução dessa função para em seguida avaliar o bloco **try catch**.
+
+## 05 - Aprendendo a fonrnerncer as funções auxiliares como globais em nossa aplicação.
+Agora vamos imaginar um cenário, onde temos diversas funções em nosso código a serem testadas, então seria necessário criar ou importar o arquivo que contém as funções **test** e **expect** em diversos arquivos para serem usados. Mas nesse caso criaremos um arquivo chamado 
+``global.js`` que contarám com essas auxiliares e que poderemos usar em todos os nossos códigos com um simples comando.
+
+```global.js```
+```javascript
+async function test(title, callback) {
+  try {
+    await callback();
+    console.log(`✔ ${title}`);
+  } catch(error) {
+    console.log(`✗ ${title}`);
+    console.error(error);
+  }
+}
+
+function expect(actual) {
+  return {
+    toBe(expected) {
+      if(actual !== expected) {
+        throw new Error(`${actual} is not equal to ${expected}`);
+      }
+    },
+    toEqual(expected){},
+    toBeGreatherThan(expected){}
+  }
+}
+
+global.test = test;
+global.expect = expect;
+```
+
+```javascript
+const { sumAsync, subtractAsync } = require('./math');
+
+async function sumTest() {
+  const result = await sumAsync(3, 7);
+  const expected = 10;
+  expect(result).toBe(expected);
+}
+
+test('sum adds numbers', sumTest);
+
+async function subtractTest() {
+  const result = await subtractAsync(7, 3);
+  const expected = 4;
+  expect(result).toBe(expected);
+}
+
+test('subtract subtracts numbers', subtractTest);
+```
+
+Ao rodarmos o comando:
+```bash
+node --require ./setup-global.js global.js
+```
+
+Ele executará nosso código atribuindo globalmente as funções **test** e **expecte** para o arquivo ```global.js``` que consequentemente usa as mesmas porém não é necessário importamos ou até mesmo escreve-las dentro do arquivo para que possamos usar.
