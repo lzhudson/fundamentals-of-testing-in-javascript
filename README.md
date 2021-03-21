@@ -36,3 +36,33 @@ if(result !== expected) {
   throw new Error(`${result} is not equal to ${expected}`);
 }
 ```
+## 02 - Aprendendo a construir uma biblioteca de Asserção com Javascript
+Na aula anterior verificamos se um resultado é igual ao esperado a partir de uma condição **if**, caso não seja disparamos um erro dentro do JavaScript, porém podemos notar que temos uma repetição de código ao tentarmos testar duas funções ou até mesmo dois resultados da mesma função, para isso criamos uma simples (mais bem simples mesmo hahahaha), uma biblioteca que testa o nosso código.
+
+```javascript
+const { sum, subtract } = require('./math');
+
+let result, expected;
+
+result = sum(3, 7);
+expected = 10;
+expect(result).toBe(expected);
+
+result = subtract(7, 3);
+expected = 4;
+expect(result).toBe(expected);
+
+function expect(actual) {
+  return {
+    toBe(expected) {
+      if(actual !== expected) {
+        throw new Error(`${actual} is not equal to ${expected}`);
+      }
+    },
+    toEqual(expected){},
+    toBeGreatherThan(expected){}
+  }
+}
+```
+
+Repare que remove os if's e também retiramos as funções e colocamos em um arquivo chamado ```math.js```, a função **expect**, recebe um parâmetro chamado **actual**, que é o valor atual do código que queremos testar, em seguida retorna um objeto com diversas funções, porém usaremos a **toBe**, que é uma função que compara o valor atual(**actual**) com o valor esperado(**expected**) que é valor que recebemos por parâmetro, caso o valor seja diferente temos um erro em tela.
