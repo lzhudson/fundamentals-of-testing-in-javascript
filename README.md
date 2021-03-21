@@ -66,3 +66,51 @@ function expect(actual) {
 ```
 
 Repare que remove os if's e também retiramos as funções e colocamos em um arquivo chamado ```math.js```, a função **expect**, recebe um parâmetro chamado **actual**, que é o valor atual do código que queremos testar, em seguida retorna um objeto com diversas funções, porém usaremos a **toBe**, que é uma função que compara o valor atual(**actual**) com o valor esperado(**expected**) que é valor que recebemos por parâmetro, caso o valor seja diferente temos um erro em tela.
+
+## 04 - Aprendendo como criar uma biblioteca de testes com JavaScript
+Nessa aula temos o seguinte a construção e aprimoramento do código da aula passada onde construimos uma lib bem simples de teste. Dessa vez abstraimos algumas partes do nosso código e delegamos algumas funcionalidades.
+
+```javascript
+const { sum, subtract } = require('./math');
+
+function sumTest() {
+  const result = sum(3, 7);
+  const expected = 10;
+  expect(result).toBe(expected);
+}
+
+test('sum adds numbers', sumTest);
+
+function subtractTest() {
+  const result = subtract(7, 3);
+  const expected = 4;
+  expect(result).toBe(expected);
+}
+
+test('subtract subtracts numbers', subtractTest);
+
+
+function test(title, callback) {
+  try {
+    callback();
+    console.log(`✔ ${title}`);
+  } catch(error) {
+    console.log(`✗ ${title}`);
+    console.error(error);
+  }
+}
+
+function expect(actual) {
+  return {
+    toBe(expected) {
+      if(actual !== expected) {
+        throw new Error(`${actual} is not equal to ${expected}`);
+      }
+    },
+    toEqual(expected){},
+    toBeGreatherThan(expected){}
+  }
+}
+```
+
+No código acima criamos a função **test**, onde a mesma recebe um **title** e um **callback**, o title representa a descrição do código que queremos testar ou seja o que aquele código está fazendo, o **callback**, representa o código em si, dentro da função temos um bloco **try catch**, o mesmo é responsável por delegar se a função ocorreu bem, caso não ele mostra qual erro temos a partir do bloco **catch**. Criamos a função **sumTest** e **subtractTest**, abstraindo o código do nosso escopo e depois chamamos as mesmas a partir da função **test**, para que elas sejam executadas e testadas.
