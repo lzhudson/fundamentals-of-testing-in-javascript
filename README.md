@@ -114,3 +114,51 @@ function expect(actual) {
 ```
 
 No código acima criamos a função **test**, onde a mesma recebe um **title** e um **callback**, o title representa a descrição do código que queremos testar ou seja o que aquele código está fazendo, o **callback**, representa o código em si, dentro da função temos um bloco **try catch**, o mesmo é responsável por delegar se a função ocorreu bem, caso não ele mostra qual erro temos a partir do bloco **catch**. Criamos a função **sumTest** e **subtractTest**, abstraindo o código do nosso escopo e depois chamamos as mesmas a partir da função **test**, para que elas sejam executadas e testadas.
+
+## 04 - Aprendendo a dar suporte em testes assíncronos com JavaScript e Promises
+No JavaScript também temos códigos que são síncronos e assíncronos, nesse caso nossa biblioteca por padrão só suporta o teste de códigos assíncronos, porém no dia a dia temos em nossas aplicações algumas chamadas assíncronas, pois uma requisição a uma API terceira, inserção ao banco de dados e etc, são coisas que demoram e de certa forma precisamos testa-las caso sejam essenciais dentro de nossa aplicação.
+
+```javascript
+const { sumAsync, subtractAsync } = require('./math');
+
+async function sumTest() {
+  const result = await sumAsync(3, 7);
+  const expected = 10;
+  expect(result).toBe(expected);
+}
+
+test('sum adds numbers', sumTest);
+
+async function subtractTest() {
+  const result = await subtractAsync(7, 3);
+  const expected = 4;
+  expect(result).toBe(expected);
+}
+
+test('subtract subtracts numbers', subtractTest);
+
+
+async function test(title, callback) {
+  try {
+    await callback();
+    console.log(`✔ ${title}`);
+  } catch(error) {
+    console.log(`✗ ${title}`);
+    console.error(error);
+  }
+}
+
+function expect(actual) {
+  return {
+    toBe(expected) {
+      if(actual !== expected) {
+        throw new Error(`${actual} is not equal to ${expected}`);
+      }
+    },
+    toEqual(expected){},
+    toBeGreatherThan(expected){}
+  }
+}
+```
+
+No código acima importamos a função **sumAsync** e **subtractAsync**, onde as mesmas são Promises que retornam um código assíncrono onde precisamos resolvar os mesmos. Note que mudamos dentro da função **test** tornamos a função assíncrona e adicionamos o **await** na função de **callback**, isso faz com que o nosso código espere a execução dessa função para em seguida avaliar o bloco **try catch**.
